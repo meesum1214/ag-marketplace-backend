@@ -10,11 +10,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 db.sequelize.sync({force: false, alter: true})
-// .then(() => {
-//     db.roles.create({
-//         role: 'Buyer'
-//     });
-// })
 
 app.get('/', (req, res) => {
     res.json({ message: 'Welcome to the Market Place.' });
