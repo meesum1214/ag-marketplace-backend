@@ -58,6 +58,8 @@ db.order.belongsTo(db.user, {foreignKey: 'user_id'});
 // =============== Relation Between Product and Order ===============
 db.product.hasMany(db.order, {foreignKey: 'product_id'});
 db.order.belongsTo(db.product, {foreignKey: 'product_id'});
+// =============== Relation Between Product and Order ===============
+// =============== Relation Between Product and Order ===============
 
 
 
