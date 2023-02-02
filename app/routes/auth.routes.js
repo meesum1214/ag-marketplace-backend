@@ -7,11 +7,5 @@ module.exports = app => {
     router.post("/buyerfarmer/login", users.buyerFarmerLogin);
     router.post("/company/register", upload.single('companyImage'), users.companyRegister);
 
-
-    // app.get('/check', (req, res) => {
-    //     res.json({ message: 'Welcome to the Market Place.' });
-    // });
-
-
     app.use('/auth/api', router);
 }
