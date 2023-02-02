@@ -63,7 +63,8 @@ exports.buyerFarmerLogin = async (req, res) => {
 
 // =================== Seller Register ===================
 exports.companyRegister = async (req, res) => {
-    const { firstName, lastName, email, password, companyName, companyImage, role_id } = req.body;
+    const { filename } = req.file;
+    const { firstName, lastName, email, password, companyName, role_id } = req.body;
 
     const user = await User.findOne({ where: { email } });
 
@@ -81,7 +82,7 @@ exports.companyRegister = async (req, res) => {
         email,
         password: hashedPassword,
         companyName,
-        companyImage,
+        companyImage: filename,
         role_id
     });
 
