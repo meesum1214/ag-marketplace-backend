@@ -11,6 +11,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 db.sequelize.sync({force: false, alter: true})
 
+require('./app/routes/auth.routes')(app);
+
 app.get('/', (req, res) => {
     res.json({ message: 'Welcome to the Market Place.' });
 });
