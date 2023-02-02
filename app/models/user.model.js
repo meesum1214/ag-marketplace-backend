@@ -23,9 +23,6 @@ module.exports = function (sequelize, Sequelize) {
         companyImage: {
             type: Sequelize.STRING
         },
-
-
-
     });
     return User;
 };
