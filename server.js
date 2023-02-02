@@ -15,6 +15,7 @@ db.sequelize.sync({ force: false, alter: true })
 require('./app/routes/auth.routes')(app);
 
 
+
 // access token is required to access these routes with parameter x-access-token in header
 app.use(function (req, res, next) {
     res.header(
@@ -26,6 +27,11 @@ app.use(function (req, res, next) {
 
 // using token verification middleware to verify token
 app.use([authJwt.verifyToken]);
+
+require('./app/routes/product.routes')(app);
+
+
+
 
 app.get('/', (req, res) => {
     res.json({ message: 'Welcome to the Market Place.' });
