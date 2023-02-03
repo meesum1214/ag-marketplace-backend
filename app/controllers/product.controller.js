@@ -1,15 +1,17 @@
 const db = require("../models");
 const Product = db.product;
+const Review = db.review;
 
 exports.addProducts = async (req, res) => {
-    const { productName, description, price, stockQuantity, biddingStatus, saleStatus, image, user_id, category_id,shippingAmount } = req.body;
+    const { filename } = req.file;
+    const { productName, description, price, stockQuantity, biddingStatus, saleStatus, user_id, category_id,shippingAmount } = req.body;
     
     try {
         const product = await Product.create({
             productName,
             description,
             price,
-            image,
+            image:filename,
             stockQuantity,
             shippingAmount,
             biddingStatus,
@@ -28,3 +30,27 @@ exports.addProducts = async (req, res) => {
         });
     }
 };
+
+
+
+         //==========addReview================
+
+exports.addReview = async (req, res) => {
+    const { review, rating, user_id, product_id } = req.body;
+    try {
+        const reviews = await Review.create({
+            review,
+            rating,
+            user_id,
+            product_id
+        });
+        res.status(200).send({
+            message: "Review added successfully",
+            reviews
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while creating the Review."
+        });
+    }
+}
