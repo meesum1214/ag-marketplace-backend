@@ -95,3 +95,54 @@ exports.companyRegister = async (req, res) => {
         user: company
     });
 }
+
+// =================== Get All Companies ===================
+exports.getAllCompanies = async (req, res) => {
+    const companies = await User.findAll({
+        where: { role_id: 1 },
+        attributes: {
+            exclude: ["role_id"]
+        },
+    });
+
+    if(companies.length === 0) return res.status(400).json({ message: "No companies found" });
+
+    res.status(200).json({
+        message: "Companies fetched successfully",
+        companies
+    });
+}
+
+// =================== Get All Farmers ===================
+exports.getAllFarmers = async (req, res) => {
+    const farmers = await User.findAll({
+        where: { role_id: 2 },
+        attributes: {
+            exclude: ["role_id", "companyName", "companyImage"]
+        },
+    });
+
+    if(farmers.length === 0) return res.status(400).json({ message: "No farmers found" });
+
+    res.status(200).json({
+        message: "Farmers fetched successfully",
+        farmers
+    });
+}
+
+// =================== Get All Buyers ===================
+exports.getAllBuyers = async (req, res) => {
+    const buyers = await User.findAll({
+        where: { role_id: 3 },
+        attributes: {
+            exclude: ["role_id", "companyName", "companyImage"]
+        },
+    });
+
+    if(buyers.length === 0) return res.status(400).json({ message: "No buyers found" });
+
+    res.status(200).json({
+        message: "Buyers fetched successfully",
+        buyers
+    });
+}
