@@ -1,5 +1,4 @@
 module.exports = app => {
-
     const upload = require('../middlewares/productImage.middleware');
 
     const products = require("../controllers/product.controller")
