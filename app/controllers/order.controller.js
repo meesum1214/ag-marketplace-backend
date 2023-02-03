@@ -31,7 +31,7 @@ exports.addOrder = async (req, res) => {
 };
 
 exports.getOrders = async (req, res) => {
-        const { user_id } = req.query;
+    const { user_id } = req.query;
 
     try {
         const orders = await order.findAll({
@@ -48,9 +48,11 @@ exports.getOrders = async (req, res) => {
                 model: db.user,
                 as: "user",
                 attributes: ["id", "firstName", "lastName", "email"]
-            }
-        ]
+            }]
         });
+
+        if(orders.length === 0) return res.status(404).send({ message: "No orders found" });
+
         res.status(200).send({
             message: "Orders fetched successfully",
             orders
