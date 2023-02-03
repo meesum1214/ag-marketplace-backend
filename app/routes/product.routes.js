@@ -5,8 +5,5 @@ module.exports = app => {
     router.post("/addproduct",upload.single('productImage'), products.addProducts);
     router.post("/review", products.addReview);
 
-
-
-
     app.use('/products/api', router);
 }
