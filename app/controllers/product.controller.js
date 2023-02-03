@@ -4,14 +4,14 @@ const Review = db.review;
 
 exports.addProducts = async (req, res) => {
     const { filename } = req.file;
-    const { productName, description, price, stockQuantity, biddingStatus, saleStatus, user_id, category_id,shippingAmount } = req.body;
-    
+    const { productName, description, price, stockQuantity, biddingStatus, saleStatus, user_id, category_id, shippingAmount } = req.body;
+
     try {
         const product = await Product.create({
             productName,
             description,
             price,
-            image:filename,
+            image: filename,
             stockQuantity,
             shippingAmount,
             biddingStatus,
@@ -33,7 +33,7 @@ exports.addProducts = async (req, res) => {
 
 
 
-         //==========addReview================
+//==========addReview================
 
 exports.addReview = async (req, res) => {
     const { review, rating, user_id, product_id } = req.body;
@@ -46,7 +46,18 @@ exports.addReview = async (req, res) => {
         });
         res.status(200).send({
             message: "Review added successfully",
-            reviews
+            reviews: {
+                review: reviews.review,
+                rating: reviews.rating,
+                include: {
+                    model: db.user,
+                    attributes: ['name'],
+                },
+                include: {
+                    model: db.product,
+                    attributes: ['productName'],
+                }
+            }
         });
     } catch (error) {
         res.status(500).send({
