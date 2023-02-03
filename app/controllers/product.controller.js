@@ -44,24 +44,54 @@ exports.addReview = async (req, res) => {
             user_id,
             product_id
         });
+
+
         res.status(200).send({
             message: "Review added successfully",
             reviews: {
                 review: reviews.review,
                 rating: reviews.rating,
-                include: {
-                    model: db.user,
-                    attributes: ['name'],
-                },
-                include: {
-                    model: db.product,
-                    attributes: ['productName'],
-                }
+                user_id: reviews.user_id,
+                product_id: reviews.product_id
             }
         });
     } catch (error) {
         res.status(500).send({
             message: error.message || "Some error occurred while creating the Review."
+        });
+    }
+}
+
+
+//==========getReviews================
+exports.getReviews = async (req, res) => {
+    const { product_id } = req.query;
+    try {
+        const reviews = await Review.findAll({
+            where: {
+                product_id
+            },
+            attributes: ["id", "review", "rating", "createdAt", "updatedAt"],
+            include: [{
+                model: db.product,
+                as: "product",
+                attributes: ["productName"]
+            }, {
+                model: db.user,
+                as: "user",
+                attributes: ["firstName", "lastName"]
+            }]
+        });
+
+        if(reviews.length === 0) return res.status(404).send({message: "No reviews found for this product."});
+
+        res.status(200).send({
+            message: "Reviews fetched successfully",
+            reviews
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while fetching the Reviews."
         });
     }
 }

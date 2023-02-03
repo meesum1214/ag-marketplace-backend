@@ -3,6 +3,9 @@ module.exports = app => {
     const products = require("../controllers/product.controller")
     const router = require("express").Router();
     router.post("/addproduct",upload.single('productImage'), products.addProducts);
-    router.post("/review", products.addReview);
+
+    router.post("/addreview", products.addReview);
+    router.get("/getreviews", products.getReviews);
+
     app.use('/products/api', router);
 }
