@@ -4,7 +4,7 @@ const Review = db.review;
 
 exports.addProducts = async (req, res) => {
     const { filename } = req.file;
-    const { productName, description, price, stockQuantity, biddingStatus, saleStatus, user_id, category_id, shippingAmount } = req.body;
+    const { productName, description, price, stockQuantity, biddingStatus, saleStatus, user_id, category_id, shippingAmount, subsidy } = req.body;
 
     try {
         const product = await Product.create({
@@ -18,6 +18,7 @@ exports.addProducts = async (req, res) => {
             saleStatus,
             category_id,
             user_id,
+            subsidy
         });
         res.status(200).send({
             message: "Product added successfully",
@@ -34,7 +35,6 @@ exports.addProducts = async (req, res) => {
 
 
 //==========addReview================
-
 exports.addReview = async (req, res) => {
     const { review, rating, user_id, product_id } = req.body;
     try {

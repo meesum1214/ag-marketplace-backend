@@ -29,7 +29,9 @@ module.exports = (sequelize, Sequelize) => {
         saleStatus: {
             type: Sequelize.BOOLEAN
         },
-        
+        subsidy:{
+            type: Sequelize.STRING
+        }
     });
     return Product;
 };
