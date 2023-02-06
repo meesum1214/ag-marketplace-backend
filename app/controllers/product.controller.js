@@ -95,3 +95,83 @@ exports.getReviews = async (req, res) => {
         });
     }
 }
+
+
+//==========getFarmerCategories================
+exports.getFarmerCategories = async (req, res) => {
+    try {
+        const categories = await db.category.findAll({
+            where: {
+                categoryType: "farmer"
+            },
+            attributes: ["id", "categoryName"]
+        });
+
+        if(categories.length === 0) return res.status(404).send({message: "No categories found."});
+
+        res.status(200).send({
+            message: "Categories fetched successfully",
+            categories
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while fetching the Categories."
+        });
+    }
+}
+
+//==========getCompanyCategories================
+exports.getCompanyCategories = async (req, res) => {
+    try {
+        const categories = await db.category.findAll({
+            where: {
+                categoryType: "company"
+            },
+            attributes: ["id", "categoryName"]
+        });
+
+        if(categories.length === 0) return res.status(404).send({message: "No categories found."});
+
+        res.status(200).send({
+            message: "Categories fetched successfully",
+            categories
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while fetching the Categories."
+        });
+    }
+}
+
+//==========getCompanyProducts================
+exports.getProducts = async (req, res) => {
+    const { category_id } = req.query;
+    try {
+        const products = await Product.findAll({
+            where: {
+                category_id,
+            },
+            attributes: ["id", "productName", "description", "price", "image", "stockQuantity", "shippingAmount", "biddingStatus", "saleStatus" ],
+            include: [{
+                model: db.category,
+                as: "category",
+                attributes: ["categoryName"]
+            }, {
+                model: db.user,
+                as: "user",
+                attributes: ["firstName", "lastName"]
+            }]
+        });
+
+        if(products.length === 0) return res.status(404).send({message: "No products found for this category."});
+
+        res.status(200).send({
+            message: "Products fetched successfully",
+            products
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while fetching the Products."
+        });
+    }
+}

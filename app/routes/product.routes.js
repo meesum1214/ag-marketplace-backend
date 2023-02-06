@@ -7,5 +7,10 @@ module.exports = app => {
     router.post("/addreview", products.addReview);
     router.get("/getreviews", products.getReviews);
 
+    router.get("/farmerCategories/get", products.getFarmerCategories);
+    router.get("/companyCategories/get", products.getCompanyCategories);
+
+    router.get("/getProducts", products.getProducts);
+
     app.use('/products/api', router);
 }
