@@ -30,7 +30,7 @@ app.use([authJwt.verifyToken]);
 
 require('./app/routes/product.routes')(app);
 require('./app/routes/order.routes')(app);
-
+require('./app/routes/coupone.routes')(app);
 
 
 

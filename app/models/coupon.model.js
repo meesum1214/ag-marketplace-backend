@@ -22,14 +22,8 @@ module.exports = (sequelize, Sequelize) => {
         endDate: {
             type: Sequelize.STRING
         },
-        usageLimit:
-        {
-            type: Sequelize.INTEGER,
-        },
-        usageCount: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0
-        }
+       
+        
     });
     return Coupon;
 }
