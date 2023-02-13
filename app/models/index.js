@@ -30,6 +30,9 @@ db.review = require("./reviews.model.js")(sequelize, Sequelize);
 // =============== Order Model ===============
 db.order = require("./order.model.js")(sequelize, Sequelize);
 
+// ============= Coupone Model ===============
+db.coupone = require("./coupone.model.js")(sequelize, Sequelize);
+
 // =============== All Relations ===============
 // =============== Relation Between User and Roles ===============
 db.user.belongsTo(db.roles, {foreignKey: 'role_id'});
@@ -58,5 +61,23 @@ db.order.belongsTo(db.user, {foreignKey: 'user_id'});
 // =============== Relation Between Product and Order ===============
 db.product.hasMany(db.order, {foreignKey: 'product_id'});
 db.order.belongsTo(db.product, {foreignKey: 'product_id'});
+
+
+// =============== Relation Between Coupone and Order ===============
+db.coupone.hasMany(db.order, {foreignKey: 'coupone_id'});
+db.order.belongsTo(db.coupone, {foreignKey: 'coupone_id'});
+
+// =============== Relation Between User and Coupone ===============
+
+db.user.hasMany(db.coupone, {foreignKey: 'user_id'});
+db.coupone.belongsTo(db.user, {foreignKey: 'user_id'});
+
+// =============== Relation Between Product and Coupone ===============
+
+db.product.hasMany(db.coupone, {foreignKey: 'product_id'});
+db.coupone.belongsTo(db.product, {foreignKey: 'product_id'});
+
+
+
 
 module.exports = db;
