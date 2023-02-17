@@ -6,6 +6,5 @@ module.exports = app => {
     router.get("/getCoupons", coupone.getCoupons);
     router.get("/updateCoupon", coupone.updateCoupon);
 
-
     app.use('/coupone/api', router);
 }

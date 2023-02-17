@@ -11,6 +11,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 db.sequelize.sync({ force: false, alter: true })
+// .then(() => {
+//     console.log('Drop and Resync Db');
+//     db.category.create({
+//         categoryName: 'Machinary & Tools',
+//         categoryType: 'company'
+//     });
+// });
 
 require('./app/routes/auth.routes')(app);
 
@@ -30,9 +37,8 @@ app.use([authJwt.verifyToken]);
 
 require('./app/routes/product.routes')(app);
 require('./app/routes/order.routes')(app);
-require('./app/routes/coupone.routes')(app);
-
-
+require('./app/routes/coupon.routes')(app);
+require('./app/routes/bid.routes')(app);
 
 app.get('/', (req, res) => {
     res.json({ message: 'Welcome to the Market Place.' });

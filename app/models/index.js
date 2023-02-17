@@ -31,7 +31,10 @@ db.review = require("./reviews.model.js")(sequelize, Sequelize);
 db.order = require("./order.model.js")(sequelize, Sequelize);
 
 // ============= Coupone Model ===============
-db.coupone = require("./coupon.model.js")(sequelize, Sequelize);
+db.coupon = require("./coupon.model.js")(sequelize, Sequelize);
+
+// ============= Bid Model ===============
+db.bid = require("./bid.model.js")(sequelize, Sequelize);
 
 // =============== All Relations ===============
 // =============== Relation Between User and Roles ===============
@@ -60,17 +63,17 @@ db.order.belongsTo(db.user, {foreignKey: 'user_id'});
 
 // =============== Relation Between Product and Order ===============
 db.product.hasMany(db.order, {foreignKey: 'product_id'});
-db.order.belongsTo(db.product, {foreignKey: 'product_id'});
-
+db.order.belongsTo(db.coupon, {foreignKey: 'coupon_id'});
+db.coupon.hasMany(db.order, {foreignKey: 'coupon_id'});
 
 // =============== Relation Between User and Coupone ===============
+db.user.hasOne(db.coupon, {foreignKey: 'user_id'});
+db.coupon.belongsTo(db.user, {foreignKey: 'user_id'});
 
-db.user.hasOne(db.coupone, {foreignKey: 'user_id'});
-db.coupone.belongsTo(db.user, {foreignKey: 'user_id'});
-
-
-
-
-
+// =============== Relation Between bid and product ===============
+db.product.hasMany(db.bid, {foreignKey: 'product_id'});
+db.bid.belongsTo(db.product, {foreignKey: 'product_id'});
+db.user.hasMany(db.bid, {foreignKey: 'user_id'});
+db.bid.belongsTo(db.user, {foreignKey: 'user_id'});
 
 module.exports = db;

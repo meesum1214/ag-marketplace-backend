@@ -1,5 +1,3 @@
-const { MEDIUMINT } = require("sequelize");
-
 module.exports = (sequelize, Sequelize) => {
     const Coupon = sequelize.define("coupon", {
         id: {
@@ -22,8 +20,6 @@ module.exports = (sequelize, Sequelize) => {
         endDate: {
             type: Sequelize.STRING
         },
-       
-        
     });
     return Coupon;
 }
