@@ -20,9 +20,25 @@ exports.addProducts = async (req, res) => {
             user_id,
             subsidy
         });
+
+        let myProduct = await Product.findOne({
+            where: {
+                id: product.id
+            },
+            include: [{
+                model: db.category,
+                attributes: ["categoryName"]
+            },
+            {
+                model: db.user,
+                attributes: ["name"]
+            }
+        ]
+        });
+
         res.status(200).send({
             message: "Product added successfully",
-            product
+            myProduct
         });
 
     } catch (error) {

@@ -4,7 +4,7 @@ const db = require('./app/models');
 const port = 8082;
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const { authJwt } = require("./app/middlewares");
+// const { authJwt } = require("./app/middlewares");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -33,7 +33,7 @@ app.use(function (req, res, next) {
 });
 
 // using token verification middleware to verify token
-app.use([authJwt.verifyToken]);
+// app.use([authJwt.verifyToken]);
 
 require('./app/routes/product.routes')(app);
 require('./app/routes/order.routes')(app);

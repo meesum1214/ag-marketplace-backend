@@ -24,6 +24,15 @@ exports.buyerFarmerRegister = async (req, res) => {
         password: hashedPassword,
         role_id
     });
+    
+    let myUser = await User.findOne({
+        where: { email },
+        include: [{
+            model: db.roles,
+            as: "role",
+            attributes: ["role"]
+        }]
+    });
 
     // Create and assign a token
     const token = jwt.sign({ email, hashedPassword }, 'marketplace-secret-key', { expiresIn: '12h' });
@@ -31,7 +40,7 @@ exports.buyerFarmerRegister = async (req, res) => {
     res.status(200).json({
         message: "User created successfully",
         token,
-        user: buyer
+        user: myUser
     });
 }
 
@@ -39,7 +48,14 @@ exports.buyerFarmerRegister = async (req, res) => {
 exports.buyerFarmerLogin = async (req, res) => {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({
+      where: { email },
+      include: [{
+            model: db.roles,
+            as: "role",
+            attributes: ["role"]
+        }]
+    });
 
     if (!user) {
         return res.status(400).json({ message: "User does not exist" });
@@ -86,13 +102,22 @@ exports.companyRegister = async (req, res) => {
         role_id
     });
 
+    let mycomPany = await User.findOne({
+        where: { email },
+        include: [{
+            model: db.roles,
+            as: "role",
+            attributes: ["role"]
+        }]
+    });
+
     // Create and assign a token
     const token = jwt.sign({ email, hashedPassword }, 'marketplace-secret-key', { expiresIn: '12h' });
 
     res.status(200).json({
         message: "User created successfully",
         token,
-        user: company
+        user: mycomPany
     });
 }
 

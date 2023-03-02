@@ -20,7 +20,7 @@ db.sequelize = sequelize;
 // =============== All Models ===============
 // =============== User Models ===============
 db.user = require("./user.model.js")(sequelize, Sequelize);
-db.roles=require("./roles.model.js")(sequelize, Sequelize);
+db.roles = require("./roles.model.js")(sequelize, Sequelize);
 
 // =============== Product Models ===============
 db.product = require("./product.model.js")(sequelize, Sequelize);
@@ -63,8 +63,7 @@ db.order.belongsTo(db.user, {foreignKey: 'user_id'});
 
 // =============== Relation Between Product and Order ===============
 db.product.hasMany(db.order, {foreignKey: 'product_id'});
-db.order.belongsTo(db.coupon, {foreignKey: 'coupon_id'});
-db.coupon.hasMany(db.order, {foreignKey: 'coupon_id'});
+db.order.belongsTo(db.product, {foreignKey: 'product_id'});
 
 // =============== Relation Between User and Coupone ===============
 db.user.hasOne(db.coupon, {foreignKey: 'user_id'});
