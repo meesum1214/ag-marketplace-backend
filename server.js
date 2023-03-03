@@ -4,7 +4,7 @@ const db = require('./app/models');
 const port = 8082;
 const cors = require('cors');
 const bodyParser = require('body-parser');
-// const { authJwt } = require("./app/middlewares");
+const { authJwt } = require("./app/middlewares");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -21,10 +21,18 @@ db.sequelize.sync({ force: false, alter: true })
 
 require('./app/routes/auth.routes')(app);
 
+app.get('/', (req, res) => {
+    res.json({ message: 'Welcome to the Market Place.' });
+});
 
 
 // access token is required to access these routes with parameter x-access-token in header
 app.use(function (req, res, next) {
+    // allow requests to /productImages without a token
+    if (req.url.startsWith('/productImages')) {
+        return next();
+    }
+    
     res.header(
         "Access-Control-Allow-Headers",
         "x-access-token, Origin, Content-Type, Accept"
@@ -32,17 +40,15 @@ app.use(function (req, res, next) {
     next();
 });
 
-// using token verification middleware to verify token
-// app.use([authJwt.verifyToken]);
 
+// using token verification middleware to verify token
+app.use([authJwt.verifyToken]);
 require('./app/routes/product.routes')(app);
 require('./app/routes/order.routes')(app);
 require('./app/routes/coupon.routes')(app);
 require('./app/routes/bid.routes')(app);
 
-app.get('/', (req, res) => {
-    res.json({ message: 'Welcome to the Market Place.' });
-});
+
 
 app.listen(port, () => {
     console.log(`http://localhost:${port}`);

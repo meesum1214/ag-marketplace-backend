@@ -18,9 +18,10 @@ exports.addProducts = async (req, res) => {
             saleStatus,
             category_id,
             user_id,
-            subsidy
+            subsidy,
+            productStatus: 'Processing'
         });
-
+        
         let myProduct = await Product.findOne({
             where: {
                 id: product.id
@@ -31,9 +32,8 @@ exports.addProducts = async (req, res) => {
             },
             {
                 model: db.user,
-                attributes: ["name"]
-            }
-        ]
+                attributes: ["firstName", "lastName"]
+            }]
         });
 
         res.status(200).send({
@@ -161,13 +161,13 @@ exports.getCompanyCategories = async (req, res) => {
 
 //==========getCompanyProducts================
 exports.getProducts = async (req, res) => {
-    const { category_id } = req.query;
+    const { user_id } = req.query;
     try {
         const products = await Product.findAll({
             where: {
-                category_id,
+                user_id,
             },
-            attributes: ["id", "productName", "description", "price", "image", "stockQuantity", "shippingAmount", "biddingStatus", "saleStatus" ],
+            attributes: ["id", "productName", "description", "price", "image", "stockQuantity", "shippingAmount", "biddingStatus", "saleStatus", "productStatus" ],
             include: [{
                 model: db.category,
                 as: "category",
