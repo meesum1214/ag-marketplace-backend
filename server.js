@@ -9,6 +9,7 @@ const { authJwt } = require("./app/middlewares");
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use("/productImages",express.static("./uploads"));
 
 db.sequelize.sync({ force: false, alter: true })
 // .then(() => {
@@ -27,12 +28,7 @@ app.get('/', (req, res) => {
 
 
 // access token is required to access these routes with parameter x-access-token in header
-app.use(function (req, res, next) {
-    // allow requests to /productImages without a token
-    if (req.url.startsWith('/productImages')) {
-        return next();
-    }
-    
+app.use(function (req, res, next) {    
     res.header(
         "Access-Control-Allow-Headers",
         "x-access-token, Origin, Content-Type, Accept"

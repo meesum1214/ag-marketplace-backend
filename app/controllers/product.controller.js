@@ -3,7 +3,6 @@ const Product = db.product;
 const Review = db.review;
 
 exports.addProducts = async (req, res) => {
-    const { filename } = req.file;
     const { productName, description, price, stockQuantity, biddingStatus, saleStatus, user_id, category_id, shippingAmount, subsidy } = req.body;
 
     try {
@@ -11,7 +10,6 @@ exports.addProducts = async (req, res) => {
             productName,
             description,
             price,
-            image: filename,
             stockQuantity,
             shippingAmount,
             biddingStatus,
@@ -49,6 +47,41 @@ exports.addProducts = async (req, res) => {
 };
 
 
+exports.addProductImages = async (req, res) => {
+    const { filename } = req.file;
+    const { product_id } = req.body;
+
+    try {
+        const productImage = await db.productImages.create({
+            image: 'https://agronomics.pk/productImages/' + filename,
+            product_id
+        });
+        
+        // let myProduct = await Product.findOne({
+        //     where: {
+        //         id: product_id
+        //     },
+        //     include: [{
+        //         model: db.category,
+        //         attributes: ["categoryName"]
+        //     },
+        //     {
+        //         model: db.user,
+        //         attributes: ["firstName", "lastName"]
+        //     }]
+        // });
+
+        res.status(200).send({
+            message: "Product Image added successfully",
+            // myProduct
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while creating the Product."
+        });
+    }
+};
 
 //==========addReview================
 exports.addReview = async (req, res) => {

@@ -98,7 +98,7 @@ exports.companyRegister = async (req, res) => {
         email,
         password: hashedPassword,
         companyName,
-        companyImage: filename,
+        companyImage: 'https://agronomics.pk/productImages/' + filename,
         role_id
     });
 

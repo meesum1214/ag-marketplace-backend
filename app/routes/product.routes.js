@@ -4,10 +4,11 @@ module.exports = app => {
     const router = require("express").Router();
     // const { authJwt } = require("../middlewares");
     // app.use([authJwt.verifyToken]);
-    
-    router.post("/addproduct",upload.single('productImage'), products.addProducts);
+
+    router.post("/addproduct", products.addProducts);
     router.post("/addreview", products.addReview);
     router.get("/getreviews", products.getReviews);
+    router.post("/addProductImage", upload.single('productImage'), products.addProductImages);
 
     router.get("/farmerCategories/get", products.getFarmerCategories);
     router.get("/companyCategories/get", products.getCompanyCategories);

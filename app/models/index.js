@@ -20,7 +20,7 @@ db.sequelize = sequelize;
 // =============== All Models ===============
 // =============== User Models ===============
 db.user = require("./user.model.js")(sequelize, Sequelize);
-db.roles = require("./roles.model.js")(sequelize, Sequelize);
+db.roles=require("./roles.model.js")(sequelize, Sequelize);
 
 // =============== Product Models ===============
 db.product = require("./product.model.js")(sequelize, Sequelize);
@@ -36,6 +36,9 @@ db.coupon = require("./coupon.model.js")(sequelize, Sequelize);
 // ============= Bid Model ===============
 db.bid = require("./bid.model.js")(sequelize, Sequelize);
 
+// ============= Product Images Model ===============
+db.productImages = require("./productImages.model.js")(sequelize, Sequelize);
+
 // =============== All Relations ===============
 // =============== Relation Between User and Roles ===============
 db.user.belongsTo(db.roles, {foreignKey: 'role_id'});
@@ -49,6 +52,10 @@ db.category.hasMany(db.product, {foreignKey: 'category_id'});
 db.product.belongsTo(db.user, {foreignKey: 'user_id'});
 db.user.hasMany(db.product, {foreignKey: 'user_id'});
 
+// =============== Relation Between Product and ProductImages ===============
+db.product.hasMany(db.productImages, {foreignKey: 'product_id'});
+db.productImages.belongsTo(db.product, {foreignKey: 'product_id'});
+
 // =============== Relation Between Product and Review ===============
 db.product.hasMany(db.review, {foreignKey: 'product_id'});
 db.review.belongsTo(db.product, {foreignKey: 'product_id'});
@@ -61,9 +68,10 @@ db.review.belongsTo(db.user, {foreignKey: 'user_id'});
 db.user.hasMany(db.order, {foreignKey: 'user_id'});
 db.order.belongsTo(db.user, {foreignKey: 'user_id'});
 
+
 // =============== Relation Between Product and Order ===============
-db.product.hasMany(db.order, {foreignKey: 'product_id'});
-db.order.belongsTo(db.product, {foreignKey: 'product_id'});
+// db.product.hasMany(db.order, {foreignKey: 'product_id'});
+// db.order.belongsTo(db.product, {foreignKey: 'product_id'});
 
 // =============== Relation Between User and Coupone ===============
 db.user.hasOne(db.coupon, {foreignKey: 'user_id'});
