@@ -6,6 +6,8 @@ module.exports = app => {
     // app.use([authJwt.verifyToken]);
 
     router.post("/addproduct", products.addProducts);
+    router.put("/updateproduct", products.updateProduct);
+    router.put("/updateproductimages",upload.single('productImage'), products.updateProductImages);
     router.post("/addreview", products.addReview);
     router.get("/getreviews", products.getReviews);
     router.post("/addProductImage", upload.single('productImage'), products.addProductImages);
@@ -14,6 +16,7 @@ module.exports = app => {
     router.get("/companyCategories/get", products.getCompanyCategories);
 
     router.get("/getProducts", products.getProducts);
+    router.get("/getProductById", products.getProductById);
 
     app.use('/products/api', router);
 }

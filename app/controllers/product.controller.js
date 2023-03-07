@@ -19,7 +19,7 @@ exports.addProducts = async (req, res) => {
             subsidy,
             productStatus: 'Processing'
         });
-        
+
         let myProduct = await Product.findOne({
             where: {
                 id: product.id
@@ -46,6 +46,98 @@ exports.addProducts = async (req, res) => {
     }
 };
 
+//========== update Product ================
+exports.updateProduct = async (req, res) => {
+    const { id, productName, description, price, stockQuantity, biddingStatus, saleStatus, user_id, category_id, shippingAmount, subsidy } = req.body;
+
+    try {
+        const product = await Product.update({
+            productName,
+            description,
+            price,
+            stockQuantity,
+            shippingAmount,
+            biddingStatus,
+            saleStatus,
+            category_id,
+            user_id,
+            subsidy,
+            productStatus: 'Processing'
+        }, {
+            where: {
+                id
+            }
+        });
+
+        let myProduct = await Product.findOne({
+            where: {
+                id
+            },
+            include: [{
+                model: db.category,
+                attributes: ["categoryName"]
+            },
+            {
+                model: db.user,
+                attributes: ["firstName", "lastName"]
+            }]
+        });
+
+        res.status(200).send({
+            message: "Product updated successfully",
+            myProduct
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while creating the Product."
+        });
+    }
+};
+
+//========== delete previous images and Update Product Images ================
+exports.updateProductImages = async (req, res) => {
+    const { filename } = req.file;
+    const { product_id } = req.body;
+
+    try {
+        await db.productImages.destroy({
+            where: {
+                product_id
+            }
+        });
+
+        await db.productImages.create({
+            image: 'https://agronomics.pk/productImages/' + filename,
+            product_id
+        });
+
+        let myProduct = await Product.findOne({
+            where: {
+                id: product_id
+            },
+            include: [{
+                model: db.category,
+                attributes: ["categoryName"]
+            },
+            {
+                model: db.user,
+                attributes: ["firstName", "lastName"]
+            }]
+        });
+
+        res.status(200).send({
+            message: "Product Image updated successfully",
+            myProduct
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while creating the Product."
+        });
+    }
+};
+
 
 exports.addProductImages = async (req, res) => {
     const { filename } = req.file;
@@ -56,7 +148,7 @@ exports.addProductImages = async (req, res) => {
             image: 'https://agronomics.pk/productImages/' + filename,
             product_id
         });
-        
+
         // let myProduct = await Product.findOne({
         //     where: {
         //         id: product_id
@@ -132,7 +224,7 @@ exports.getReviews = async (req, res) => {
             }]
         });
 
-        if(reviews.length === 0) return res.status(404).send({message: "No reviews found for this product."});
+        if (reviews.length === 0) return res.status(404).send({ message: "No reviews found for this product." });
 
         res.status(200).send({
             message: "Reviews fetched successfully",
@@ -156,7 +248,7 @@ exports.getFarmerCategories = async (req, res) => {
             attributes: ["id", "categoryName"]
         });
 
-        if(categories.length === 0) return res.status(404).send({message: "No categories found."});
+        if (categories.length === 0) return res.status(404).send({ message: "No categories found." });
 
         res.status(200).send({
             message: "Categories fetched successfully",
@@ -179,7 +271,7 @@ exports.getCompanyCategories = async (req, res) => {
             attributes: ["id", "categoryName"]
         });
 
-        if(categories.length === 0) return res.status(404).send({message: "No categories found."});
+        if (categories.length === 0) return res.status(404).send({ message: "No categories found." });
 
         res.status(200).send({
             message: "Categories fetched successfully",
@@ -200,7 +292,7 @@ exports.getProducts = async (req, res) => {
             where: {
                 user_id,
             },
-            attributes: ["id", "productName", "description", "price", "image", "stockQuantity", "shippingAmount", "biddingStatus", "saleStatus", "productStatus" ],
+            attributes: ["id", "productName", "description", "price", "stockQuantity", "shippingAmount", "biddingStatus", "saleStatus", "productStatus"],
             include: [{
                 model: db.category,
                 as: "category",
@@ -209,10 +301,53 @@ exports.getProducts = async (req, res) => {
                 model: db.user,
                 as: "user",
                 attributes: ["firstName", "lastName"]
+            }, {
+                model: db.productImages,
+                as: "product_images",
+                attributes: ["image"]
             }]
         });
 
-        if(products.length === 0) return res.status(404).send({message: "No products found for this category."});
+        if (products.length === 0) return res.status(404).send({ message: "No products found for this category." });
+
+        res.status(200).send({
+            message: "Products fetched successfully",
+            products
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while fetching the Products."
+        });
+    }
+}
+
+
+//========== getProductById ================
+exports.getProductById = async (req, res) => {
+    const { id } = req.query;
+
+    try {
+        const products = await Product.findOne({
+            where: {
+                id,
+            },
+            attributes: ["id", "productName", "description", "price", "stockQuantity", "shippingAmount", "biddingStatus", "saleStatus", "productStatus", "subsidy"],
+            include: [{
+                model: db.category,
+                as: "category",
+                attributes: ["categoryName"]
+            }, {
+                model: db.user,
+                as: "user",
+                attributes: ["firstName", "lastName"]
+            }, {
+                model: db.productImages,
+                as: "product_images",
+                attributes: ["image"]
+            }]
+        });
+
+        if (products.length === 0) return res.status(404).send({ message: "No products found!" });
 
         res.status(200).send({
             message: "Products fetched successfully",
