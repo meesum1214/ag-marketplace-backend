@@ -16,7 +16,7 @@ exports.addProducts = async (req, res) => {
             saleStatus,
             category_id,
             user_id,
-            subsidy,
+            subsidy: `${subsidy}%`,
             productStatus: 'Processing'
         });
 
@@ -61,7 +61,7 @@ exports.updateProduct = async (req, res) => {
             saleStatus,
             category_id,
             user_id,
-            subsidy,
+            subsidy: `${subsidy}%`,
             productStatus: 'Processing'
         }, {
             where: {
@@ -95,10 +95,9 @@ exports.updateProduct = async (req, res) => {
     }
 };
 
-//========== delete previous images and Update Product Images ================
-exports.updateProductImages = async (req, res) => {
-    const { filename } = req.file;
-    const { product_id } = req.body;
+//========== delete previous images by product Id ================
+exports.deleteProductImages = async (req, res) => {
+    const { product_id } = req.query;
 
     try {
         await db.productImages.destroy({
@@ -106,6 +105,29 @@ exports.updateProductImages = async (req, res) => {
                 product_id
             }
         });
+
+        res.status(200).send({
+            message: "Product Images deleted successfully"
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while creating the Product."
+        });
+    }
+};
+
+//========== Update Product Images ================
+exports.updateProductImages = async (req, res) => {
+    const { filename } = req.file;
+    const { product_id } = req.body;
+
+    try {
+        // await db.productImages.destroy({
+        //     where: {
+        //         product_id
+        //     }
+        // });
 
         await db.productImages.create({
             image: 'https://agronomics.pk/productImages/' + filename,
