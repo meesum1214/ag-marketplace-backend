@@ -13,7 +13,7 @@ exports.addProducts = async (req, res) => {
             stockQuantity,
             shippingAmount,
             biddingStatus,
-            saleStatus,
+            saleStatus: `${saleStatus}%`,
             category_id,
             user_id,
             subsidy: `${subsidy}%`,
@@ -86,6 +86,67 @@ exports.updateProduct = async (req, res) => {
         res.status(200).send({
             message: "Product updated successfully",
             myProduct
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while creating the Product."
+        });
+    }
+};
+
+//========== update Product Bid Id ================
+exports.updateProductBidId = async (req, res) => {
+    const { product_id, bid_id } = req.body;
+
+    try {
+        const product = await Product.update({
+            bid_id
+        }, {
+            where: {
+                id: product_id
+            }
+        });
+        
+        let myProduct = await Product.findOne({
+            where: {
+                id: product_id
+            },
+            include: [{
+                model: db.category,
+                attributes: ["categoryName"]
+            },
+            {
+                model: db.user,
+                attributes: ["firstName", "lastName"]
+            }]
+        });
+
+        res.status(200).send({
+            message: "Product updated successfully",
+            myProduct
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while creating the Product."
+        });
+    }
+};
+
+//========== delete Bid by Bid_Id ================
+exports.deleteBidById = async (req, res) => {
+    const { bid_id } = req.query;
+    
+    try {
+        await db.bid.destroy({
+            where: {
+                id: bid_id
+            }
+        });
+        
+        res.status(200).send({
+            message: "Bid deleted successfully"
         });
 
     } catch (error) {
@@ -353,7 +414,7 @@ exports.getProductById = async (req, res) => {
             where: {
                 id,
             },
-            attributes: ["id", "productName", "description", "price", "stockQuantity", "shippingAmount", "biddingStatus", "saleStatus", "productStatus", "subsidy"],
+            attributes: ["id", "productName", "description", "price", "stockQuantity", "shippingAmount", "biddingStatus", "saleStatus", "productStatus", "subsidy", "bid_id"],
             include: [{
                 model: db.category,
                 as: "category",

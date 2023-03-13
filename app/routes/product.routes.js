@@ -13,6 +13,9 @@ module.exports = app => {
     router.get("/getreviews", products.getReviews);
     router.post("/addProductImage", upload.single('productImage'), products.addProductImages);
 
+    router.put("/updateProductBidId", products.updateProductBidId)
+    router.delete("/deleteBidById", products.deleteBidById)
+
     router.get("/farmerCategories/get", products.getFarmerCategories);
     router.get("/companyCategories/get", products.getCompanyCategories);
 

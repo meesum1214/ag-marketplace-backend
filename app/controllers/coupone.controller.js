@@ -1,35 +1,31 @@
 const db = require("../models");
-var voucher_codes = require('voucher-code-generator');
-const coupone = db.coupone;
-
+const coupone = db.coupon;
 
 exports.addCoupon = async (req, res) => {
-    const { discount, status, startDate, endDate } = req.body;
-    const code = voucher_codes.generate({
-        length: 8,
-        count: 1,
-        charset: voucher_codes.charset("alphanumeric")
-    });
+    const { couponCode, discount, startDate, endDate, user_id } = req.body;
+    
     try {
         const coupons = await coupone.create({
-            couponeCode: code,
+            couponCode,
             discount,
-            status,
+            status: "okay",
             startDate,
             endDate,
-    
-
+            user_id
         });
+
         res.status(200).send({
             message: "Coupon added successfully",
             coupons
         });
+        
     } catch (error) {
         res.status(500).send({
             message: error.message || "Some error occurred while creating the Coupon."
         });
     }
 }
+
 
 exports.getCoupons = async (req, res) => {
     const { product_id } = req.query;

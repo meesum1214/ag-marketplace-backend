@@ -68,13 +68,12 @@ db.review.belongsTo(db.user, {foreignKey: 'user_id'});
 db.user.hasMany(db.order, {foreignKey: 'user_id'});
 db.order.belongsTo(db.user, {foreignKey: 'user_id'});
 
-
 // =============== Relation Between Product and Order ===============
 // db.product.hasMany(db.order, {foreignKey: 'product_id'});
 // db.order.belongsTo(db.product, {foreignKey: 'product_id'});
 
 // =============== Relation Between User and Coupone ===============
-db.user.hasOne(db.coupon, {foreignKey: 'user_id'});
+db.user.hasMany(db.coupon, {foreignKey: 'user_id'});
 db.coupon.belongsTo(db.user, {foreignKey: 'user_id'});
 
 // =============== Relation Between bid and product ===============
