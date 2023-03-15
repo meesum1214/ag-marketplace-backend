@@ -442,3 +442,40 @@ exports.getProductById = async (req, res) => {
         });
     }
 }
+
+//==========getProductByCategory================
+exports.getProductsByCategoryId = async (req, res) => {
+    const { category_id } = req.query;
+    try {
+        const products = await Product.findAll({
+            where: {
+                category_id,
+            },
+            attributes: ["id", "productName", "description", "price", "stockQuantity", "shippingAmount", "biddingStatus", "saleStatus", "productStatus"],
+            include: [{
+                model: db.category,
+                as: "category",
+                attributes: ["categoryName"]
+            }, {
+                model: db.user,
+                as: "user",
+                attributes: ["firstName", "lastName"]
+            }, {
+                model: db.productImages,
+                as: "product_images",
+                attributes: ["image"]
+            }]
+        });
+
+        if (products.length === 0) return res.status(404).send({ message: "No products found for this category." });
+
+        res.status(200).send({
+            message: "Products fetched successfully",
+            products
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while fetching the Products."
+        });
+    }
+}

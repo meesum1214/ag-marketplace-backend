@@ -21,6 +21,7 @@ module.exports = app => {
 
     router.get("/getProducts", products.getProducts);
     router.get("/getProductById", products.getProductById);
+    router.get("/getProductsByCategoryId", products.getProductsByCategoryId);
 
     app.use('/products/api', router);
 }

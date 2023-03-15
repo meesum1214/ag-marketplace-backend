@@ -3,8 +3,21 @@ const coupone = db.coupon;
 
 exports.addCoupon = async (req, res) => {
     const { couponCode, discount, startDate, endDate, user_id } = req.body;
-    
+
     try {
+
+        const couponExists = await coupone.findOne({
+            where: {
+                couponCode
+            }
+        });
+
+        if (couponExists) {
+            return res.status(400).send({
+                message: "Coupon already exists"
+            });
+        }
+        
         const coupons = await coupone.create({
             couponCode,
             discount,
@@ -14,11 +27,23 @@ exports.addCoupon = async (req, res) => {
             user_id
         });
 
+        const coupon = await coupone.findOne({
+            where: {
+                id: coupons.id
+            },
+            attributes: ["couponCode", "discount", "status", "startDate", "endDate"],
+            include: [{
+                model: db.user,
+                as: "user",
+                attributes: ["firstName", "lastName", "email"]
+            }]
+        });
+
         res.status(200).send({
             message: "Coupon added successfully",
-            coupons
+            coupon
         });
-        
+
     } catch (error) {
         res.status(500).send({
             message: error.message || "Some error occurred while creating the Coupon."
@@ -26,22 +51,28 @@ exports.addCoupon = async (req, res) => {
     }
 }
 
-
 exports.getCoupons = async (req, res) => {
-    const { product_id } = req.query;
+    const { user_id } = req.query;
 
     try {
         const coupons = await coupone.findAll({
             where: {
-                product_id
+                user_id
             },
-            attributes: ["couponeCode", "discount", "status", "startDate", "endDate"],
+            attributes: ["id", "couponCode", "discount", "status", "startDate", "endDate"],
             include: [{
                 model: db.user,
                 as: "user",
                 attributes: ["firstName", "lastName", "email"]
             }]
         });
+
+        if (!coupons) {
+            return res.status(404).send({
+                message: "Coupons not found"
+            });
+        }
+
         res.status(200).send({
             message: "Coupon fetched successfully",
             coupons
@@ -53,27 +84,41 @@ exports.getCoupons = async (req, res) => {
     }
 }
 
-exports.updateCoupon = async (req, res) => {
-    const { id } = req.params;
-    const { discount, status, startDate, endDate, usageLimit, usageCount } = req.body;
+exports.deleteCoupon = async (req, res) => {
+    const { id } = req.query;
+
     try {
-        const coupons = await coupone.update({
-            discount,
-            status,
-            startDate,
-            endDate,
-        }, {
+        const coupon = await coupone.findOne({
+            where: {
+                id
+            },
+            attributes: ["couponCode", "discount", "status", "startDate", "endDate"],
+            include: [{
+                model: db.user,
+                as: "user",
+                attributes: ["firstName", "lastName", "email"]
+            }]
+        });
+
+        if (!coupon) {
+            return res.status(404).send({
+                message: "Coupon not found with id " + id
+            });
+        }
+
+        await coupone.destroy({
             where: {
                 id
             }
         });
+
         res.status(200).send({
-            message: "Coupon updated successfully",
-            coupons
+            message: "Coupon deleted successfully",
+            coupon
         });
     } catch (error) {
         res.status(500).send({
-            message: error.message || "Some error occurred while updating the Coupon."
+            message: error.message || "Some error occurred while deleting the Coupon."
         });
     }
 }
