@@ -43,7 +43,7 @@ require('./app/routes/product.routes')(app);
 require('./app/routes/order.routes')(app);
 require('./app/routes/coupon.routes')(app);
 require('./app/routes/bid.routes')(app);
-
+require('./app/routes/cart.routes')(app);
 
 
 app.listen(port, () => {

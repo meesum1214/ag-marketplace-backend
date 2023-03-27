@@ -39,6 +39,9 @@ db.bid = require("./bid.model.js")(sequelize, Sequelize);
 // ============= Product Images Model ===============
 db.productImages = require("./productImages.model.js")(sequelize, Sequelize);
 
+// ============= Cart Model =================
+db.cart = require("./cart.model.js")(sequelize, Sequelize);
+
 // =============== All Relations ===============
 // =============== Relation Between User and Roles ===============
 db.user.belongsTo(db.roles, {foreignKey: 'role_id'});
@@ -81,5 +84,11 @@ db.product.hasMany(db.bid, {foreignKey: 'product_id'});
 db.bid.belongsTo(db.product, {foreignKey: 'product_id'});
 db.user.hasMany(db.bid, {foreignKey: 'user_id'});
 db.bid.belongsTo(db.user, {foreignKey: 'user_id'});
+
+// =============== Relation Between Product, product_images, user and Cart ===============
+db.product.hasMany(db.cart, {foreignKey: 'product_id'});
+db.cart.belongsTo(db.product, {foreignKey: 'product_id'});
+db.user.hasMany(db.cart, {foreignKey: 'user_id'});
+db.cart.belongsTo(db.user, {foreignKey: 'user_id'});
 
 module.exports = db;

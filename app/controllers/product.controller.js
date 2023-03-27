@@ -3,20 +3,26 @@ const Product = db.product;
 const Review = db.review;
 
 exports.addProducts = async (req, res) => {
-    const { productName, description, price, stockQuantity, biddingStatus, saleStatus, user_id, category_id, shippingAmount, subsidy } = req.body;
+    const { user_id, category_id, brandName, productName, composition, unit, quantity, packaging, price, discount_type, discount, bidding_status, shipping_amount, description, subsidy, tax_percentage } = req.body;
 
     try {
         const product = await Product.create({
+            brandName,
             productName,
-            description,
+            composition,
+            unit,
+            quantity,
+            packaging,
             price,
-            stockQuantity,
-            shippingAmount,
-            biddingStatus,
-            saleStatus: `${saleStatus}%`,
+            discount_type,
+            discount,
+            bidding_status,
+            shipping_amount,
+            description,
+            subsidy: `${subsidy}%`,
+            tax_percentage: `${tax_percentage}%`,
             category_id,
             user_id,
-            subsidy: `${subsidy}%`,
             productStatus: 'Processing'
         });
 
@@ -476,6 +482,31 @@ exports.getProductsByCategoryId = async (req, res) => {
     } catch (error) {
         res.status(500).send({
             message: error.message || "Some error occurred while fetching the Products."
+        });
+    }
+}
+
+// ========== getProductFirstImage ==========
+exports.getProductFirstImage = async (req, res) => {
+    const { id } = req.query;
+
+    try {
+        const productImage = await db.productImages.findOne({
+            where: {
+                product_id: id
+            },
+            attributes: ["image"]
+        });
+
+        if (!productImage) return res.status(404).send({ message: "No image found for this product." });
+
+        res.status(200).send({
+            message: "Image fetched successfully",
+            productImage
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while fetching the Product Image."
         });
     }
 }
