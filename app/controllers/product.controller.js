@@ -2,8 +2,9 @@ const db = require("../models");
 const Product = db.product;
 const Review = db.review;
 
-exports.addProducts = async (req, res) => {
-    const { user_id, category_id, brandName, productName, composition, unit, quantity, packaging, price, discount_type, discount, bidding_status, shipping_amount, description, subsidy, tax_percentage } = req.body;
+// =============== Add Fertilizer Product ===============
+exports.addFertilizerProducts = async (req, res) => {
+    const { user_id, category_id, brandName, productName, composition, unit, quantity, packaging, price, discountType, biddingStatus, discount, shippingAmount, description, subsidy, tax_percentage } = req.body;
 
     try {
         const product = await Product.create({
@@ -14,10 +15,118 @@ exports.addProducts = async (req, res) => {
             quantity,
             packaging,
             price,
-            discount_type,
+            discountType,
             discount,
-            bidding_status,
-            shipping_amount,
+            biddingStatus,
+            shippingAmount,
+            description,
+            subsidy: `${subsidy}%`,
+            tax_percentage: `${tax_percentage}%`,
+            category_id,
+            user_id,
+            productStatus: 'Processing'
+        });
+
+        let myProduct = await Product.findOne({
+            where: {
+                id: product.id
+            },
+            include: [{
+                model: db.category,
+                attributes: ["categoryName"]
+            },
+            {
+                model: db.user,
+                attributes: ["firstName", "lastName"]
+            }]
+        });
+
+        res.status(200).send({
+            message: "Product added successfully",
+            myProduct
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while creating the Product."
+        });
+    }
+};
+
+// =============== Add Seed Product ===============
+exports.addSeedProduct = async (req, res) => {
+    const { brandName, seed, variety, type, suitablity, weightkg, quantity, weightPerSeed, description, price, packaging, discountType, discount, biddingStatus, subsidy, shippingAmount, tax_percentage, category_id, user_id } = req.body;
+
+    try {
+        const product = await Product.create({
+            brandName,
+            seed,
+            seed_variety: variety,
+            seed_type: type,
+            seed_suitablity: suitablity,
+            seed_weight_kg: weightkg,
+            quantity,
+            weight_per_seed: weightPerSeed,
+            description,
+            price,
+            packaging,
+            discountType,
+            discount,
+            biddingStatus,
+            subsidy: `${subsidy}%`,
+            shippingAmount,
+            tax_percentage: `${tax_percentage}%`,
+            category_id,
+            user_id,
+            productStatus: 'Processing'
+        });
+
+        let myProduct = await Product.findOne({
+            where: {
+                id: product.id
+            },
+            include: [{
+                model: db.category,
+                attributes: ["categoryName"]
+            },
+            {
+                model: db.user,
+                attributes: ["firstName", "lastName"]
+            }]
+        });
+
+        res.status(200).send({
+            message: "Product added successfully",
+            myProduct
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while creating the Product."
+        });
+    }
+};
+
+// =============== Add Plant Pathology & Entomology Product =================
+exports.addPlantPathologyProduct = async (req, res) => {
+    const { plant_category_type, brandName, productName, composition, plant_product_type, unit, plant_pathology_weight, quantity, packaging, price, discountType, discount, biddingStatus, shippingAmount, description, subsidy, tax_percentage, category_id, user_id } = req.body;
+
+    try {
+        const product = await Product.create({
+            brandName,
+            productName,
+            composition,
+            plant_category_type,
+            plant_product_type,
+            unit,
+            plant_pathology_weight,
+            quantity,
+            packaging,
+            price,
+            discountType,
+            discount,
+            biddingStatus,
+            shippingAmount,
             description,
             subsidy: `${subsidy}%`,
             tax_percentage: `${tax_percentage}%`,
@@ -113,7 +222,7 @@ exports.updateProductBidId = async (req, res) => {
                 id: product_id
             }
         });
-        
+
         let myProduct = await Product.findOne({
             where: {
                 id: product_id
@@ -143,14 +252,14 @@ exports.updateProductBidId = async (req, res) => {
 //========== delete Bid by Bid_Id ================
 exports.deleteBidById = async (req, res) => {
     const { bid_id } = req.query;
-    
+
     try {
         await db.bid.destroy({
             where: {
                 id: bid_id
             }
         });
-        
+
         res.status(200).send({
             message: "Bid deleted successfully"
         });

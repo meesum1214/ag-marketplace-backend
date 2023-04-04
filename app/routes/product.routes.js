@@ -5,7 +5,10 @@ module.exports = app => {
     // const { authJwt } = require("../middlewares");
     // app.use([authJwt.verifyToken]);
 
-    router.post("/addproduct", products.addProducts);
+    router.post("/addFertilizerProduct", products.addFertilizerProducts);
+    router.post("/addSeedProduct", products.addSeedProduct);
+    router.post("/addPlantPathologyProduct", products.addPlantPathologyProduct);
+
     router.put("/updateproduct", products.updateProduct);
     router.delete("/deleteproductimages", products.deleteProductImages);
     router.put("/updateproductimages", upload.single('productImage'), products.updateProductImages);
